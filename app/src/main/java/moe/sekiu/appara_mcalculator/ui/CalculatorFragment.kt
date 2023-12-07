@@ -1,36 +1,42 @@
-package moe.sekiu.appara_mcalculator
+package moe.sekiu.appara_mcalculator.ui
 
 import android.content.pm.PackageManager
-import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Bundle
 import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.navigation.fragment.findNavController
+import com.f0x1d.logfox.ui.fragment.base.BaseViewModelFragment
 import com.google.android.material.snackbar.Snackbar
 import java.security.MessageDigest
-import moe.sekiu.appara_mcalculator.databinding.ActivityMainBinding
+import moe.sekiu.appara_mcalculator.R
+import moe.sekiu.appara_mcalculator.databinding.FragmentCalculatorBinding
 import moe.sekiu.appara_mcalculator.kit.ByteArrayConverter
 import moe.sekiu.appara_mcalculator.kit.color
 import moe.sekiu.appara_mcalculator.kit.plus
 import moe.sekiu.appara_mcalculator.kit.spannable
+import moe.sekiu.appara_mcalculator.viewmodel.CalculatorViewModel
 
-
-class MainActivity : AppCompatActivity()
+class CalculatorFragment : BaseViewModelFragment<CalculatorViewModel, FragmentCalculatorBinding>()
 {
-    private lateinit var binding : ActivityMainBinding
+    override val viewModel by hiltNavGraphViewModels<CalculatorViewModel>(R.id.calculatorFragment)
 
-    override fun onCreate(savedInstanceState : Bundle?)
+    override fun onViewCreated(view : View, savedInstanceState : Bundle?)
     {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        super.onViewCreated(view, savedInstanceState)
+        binding.selectAppButton.setOnClickListener {
+            findNavController().navigate(CalculatorFragmentDirections.actionCalculatorFragmentToChooseAppFragment())
+        }
         binding.calc.setOnClickListener {
             val packageName = "${binding.packageNameInput.text}"
-            runCatching { packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES) }
+            runCatching { requireActivity().packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES) }
                 .onFailure { th ->
-                    if (th is NameNotFoundException)
+                    if (th is PackageManager.NameNotFoundException)
                     {
-                        binding.ARAMOutput.setText(" ")
+                        binding.ARAMOutput.setText(R.string.blank)
                         Snackbar.make(binding.root, "App $packageName not found", Snackbar.LENGTH_SHORT).gravityTop().show()
                     }
                 }.onSuccess { info ->
@@ -46,6 +52,18 @@ class MainActivity : AppCompatActivity()
                 }
         }
     }
+
+    override fun onViewStateRestored(savedInstanceState : Bundle?)
+    {
+        super.onViewStateRestored(savedInstanceState)
+        binding.packageNameInput.setText(viewModel.packageName)
+    }
+
+    override fun inflateBinding(inflater : LayoutInflater, container : ViewGroup?) : FragmentCalculatorBinding
+    {
+        return FragmentCalculatorBinding.inflate(inflater, container, false)
+    }
+
 
     private val colors = arrayOf(
         0xFF0000FF.toInt(),  // BLUE

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools" android:id="@+id/nav_graph"
+            app:startDestination="@id/calculatorFragment">
+
+    <fragment android:id="@+id/calculatorFragment" android:name="moe.sekiu.appara_mcalculator.ui.CalculatorFragment"
+              android:label="fragment_calculator" tools:layout="@layout/fragment_calculator">
+        <action android:id="@+id/action_calculatorFragment_to_chooseAppFragment"
+                app:destination="@id/chooseAppFragment"/>
+    </fragment>
+    <fragment android:id="@+id/chooseAppFragment" android:name="com.f0x1d.logfox.ui.fragment.filters.ChooseAppFragment"
+              android:label="ChooseAppFragment"/>
+</navigation>
