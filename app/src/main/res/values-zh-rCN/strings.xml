@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">应用 ARA-M 计算器</string>
+    <string name="error">错误: %s</string>
+    <string name="apps">应用</string>
+    <string name="search">搜索</string>
+    <string name="close">关闭</string>
+    <string name="select">选择</string>
+    <string name="calc">计算</string>
+    <string name="package_name">包名</string>
+</resources>
