@@ -5,8 +5,9 @@
     <string name="search">Search</string>
     <string name="close">Close</string>
     <string name="select">Select</string>
-    <string name="ara_m">ARA-M</string>
+    <string name="ara_m" translatable="false">ARA-M</string>
     <string name="calc">Calc</string>
     <string name="package_name">Package Name</string>
-    <string name="blank">&#160;</string>
+    <string name="blank" translatable="false">&#160;</string>
+    <string name="support_omapi_slot">Support OMAPI Slot:</string>
 </resources>

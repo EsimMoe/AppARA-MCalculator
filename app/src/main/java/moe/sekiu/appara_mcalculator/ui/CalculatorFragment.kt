@@ -2,6 +2,7 @@ package moe.sekiu.appara_mcalculator.ui
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.se.omapi.SEService
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.f0x1d.logfox.ui.fragment.base.BaseViewModelFragment
 import com.google.android.material.snackbar.Snackbar
 import java.security.MessageDigest
+import java.util.concurrent.Executors
 import moe.sekiu.appara_mcalculator.R
 import moe.sekiu.appara_mcalculator.databinding.FragmentCalculatorBinding
 import moe.sekiu.appara_mcalculator.kit.ByteArrayConverter
@@ -23,10 +25,16 @@ import moe.sekiu.appara_mcalculator.viewmodel.CalculatorViewModel
 class CalculatorFragment : BaseViewModelFragment<CalculatorViewModel, FragmentCalculatorBinding>()
 {
     override val viewModel by hiltNavGraphViewModels<CalculatorViewModel>(R.id.calculatorFragment)
+    private lateinit var seService : SEService
 
     override fun onViewCreated(view : View, savedInstanceState : Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
+        seService = SEService(requireContext(), Executors.newSingleThreadExecutor()) {
+            requireActivity().runOnUiThread {
+                binding.supportOmapiSlot.text = seService.readers.map { it.name }.filter { it.startsWith("SIM") }.map { it.takeIf { it != "SIM" } ?: "SIM1" }.joinToString(" ")
+            }
+        }
         binding.selectAppButton.setOnClickListener {
             findNavController().navigate(CalculatorFragmentDirections.actionCalculatorFragmentToChooseAppFragment())
         }
